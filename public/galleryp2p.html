@@ -57,13 +57,13 @@
                              roles="{{roles}}">
                 </xdmvc-roles>
                 <xdmvc-devices id="devices" devices="{{devices}}"></xdmvc-devices>
-                <xdmvc-url-pairing connector="visitor" connectee="owner" url="{{url}}"></xdmvc-url-pairing>
+                <xdmvc-url-pairing connector="owner" connectee="visitor" url="{{url}}"></xdmvc-url-pairing>
+                <xdmvc-connect connections="[[devices.connectedDevices]]" url="[[url]]"></xdmvc-connect>
 
 
                  <template is="dom-if" if="{{showOver(roles.isselected.*, devices.thisDevice.type, imageSelected)}}">
                      <h1>Show your photos!</h1>
                      <input is="core-input" type="file" multiple accept="image/*" on-change="handleFiles"  label="Choose photos"/>
-                     <xdmvc-connect connections="[[devices.connectedDevices]]" url="[[url]]"></xdmvc-connect>
 
                      <div>
                         <gallery-element id='gallery'
