@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+
+    <!-- 1. Load platform support before any code that touches the DOM. -->
+    <!--    <script src="http://129.132.114.114/js/remote.js"></script>  -->
+      <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+      <link rel="import" href="bower_components/polymer/polymer.html">
+      <!-- 2. Load the component using an HTML Import -->
+    <script src="bower_components/xdmvcclient/js/queryParams.js"></script>
+
+    <link rel="import" href="bower_components/xdmvcclient/polymer/xdmvc-connect.html">
+    <link rel="import" href="bower_components/xdmvcclient/polymer/xdmvc-connection.html">
+    <link rel="import" href="bower_components/xdmvcclient/polymer/xdmvc-synchronised.html">
+    <link rel="import" href="bower_components/xdmvcclient/polymer/xdmvc-url-pairing.html">
+    <link rel="import" href="bower_components/xdmvcclient/layouts/controller-layout.html">
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title></title>
+</head>
+<body>
+<style>
+    img {
+        max-width: 100%;
+    }
+
+
+
+</style>
+<dom-module id="my-app">
+    <template>
+        <style>
+            paper-button {
+                font-size: 3em;
+            }
+
+            div.controller {
+                width: 90%;
+                margin: 0 auto;
+            }
+
+        </style>
+        <xdmvc-connection peerport="9000" ajaxport="9001" socketport="3001"></xdmvc-connection>
+        <xdmvc-url-pairing connector="viewer" connectee="controller" url="{{url}}"></xdmvc-url-pairing>
+
+        <xdmvc-synchronised id="sync"
+                            objects='{{synced}}'>
+        </xdmvc-synchronised>
+
+        <controller-layout >
+            <div class="controller">
+                <paper-button on-click="prev" raised>Previous</paper-button>
+                <paper-button on-click="next" raised>Next</paper-button>
+
+            </div>
+            <div class="viewer">
+                <img on-tap="next" src="{{getSource(synced.gallery.selected, albums)}}"/>
+            </div>
+        </controller-layout>
+
+    </template>
+</dom-module>
+<script>
+    HTMLImports.whenReady(function () {
+
+        Polymer({
+            is: "my-app",
+            properties: {
+                synced: {
+                    type: Object,
+                    value: function(){ return { "gallery": {"selected": 0},
+                        "cursor" :{"x": -1, "y": -1}} } ,
+                    notify: true
+                },
+                albums: {
+                    type: Object
+                }
+            },
+
+            ready: function(){
+                ajax.get("/gallery", undefined,
+                        function (data) {
+                           this.albums= JSON.parse(data);
+                        }.bind(this), true
+                );
+            },
+            next: function() {
+                this.set("synced.gallery.selected", this.synced.gallery.selected +1);
+            },
+            prev: function() {
+                this.set("synced.gallery.selected", this.synced.gallery.selected -1);
+            },
+            getSource :function() {
+                return this.albums[Object.keys(this.albums)[0]].large[this.synced.gallery.selected];
+
+            }
+
+        });
+    });
+</script>
+
+<my-app></my-app>
+
+
+</body>
+</html>

@@ -42,18 +42,58 @@
     <title>Paging</title>
 </head>
 <body>
+<style>
+
+    body{
+        font-size: 2em;
+    }
+
+</style>
 <dom-module id="my-app">
     <template>
+        <style>
+
+
+            page-layout div {
+                height: 200px;
+                font-size: 3em;
+                text-align: center;
+            }
+            page-layout div:nth-child(1) {
+                background: deepskyblue;
+            }
+            page-layout div:nth-child(2) {
+                background: #512da8;
+            }
+            page-layout div:nth-child(3) {
+                background-color: #43a047;
+            }
+            page-layout div:nth-child(4) {
+                background-color: #fdd835;
+            }
+            page-layout div:nth-child(5) {
+                background-color: #ff3d00;
+            }
+            page-layout div:nth-child(6) {
+                background-color: lightseagreen;
+            }
+
+            paper-button {
+                margin-bottom: 1em;
+                margin-top: 1em;
+            }
+
+        </style>
         <xdmvc-connection peerport="9005" ajaxport="9006" socketport="3001"></xdmvc-connection>
 
         <xdmvc-url-pairing connector="viewer" connectee="controller" url="{{url}}"></xdmvc-url-pairing>
         <page-layout id="pages" current="{{current}}" selected="{{selected}}">
+            <div>page 0</div>
             <div>page 1</div>
             <div>page 2</div>
             <div>page 3</div>
             <div>page 4</div>
             <div>page 5</div>
-            <div>page 6</div>
         </page-layout>
         <paper-button on-click="prev" raised>Previous</paper-button>
         <paper-button on-click="next" raised>Next</paper-button>
